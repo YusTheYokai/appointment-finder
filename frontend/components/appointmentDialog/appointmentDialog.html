@@ -3,7 +3,6 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 id="appointmentDialogTitle" class="modal-title"></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="container-sm">
@@ -48,14 +47,15 @@
                             <input id="dateTimeInput" type="datetime-local" class="w-100" style="margin-bottom: 16px;" />
                         </div>
                         <div class="col-sm-2">
-                            <button id="addDateTimeButton" class="btn btn-secondary" onclick="addDateTime()"><i class="bi bi-plus" aria-hidden="true"></i></button>
+                            <button id="addDateTimeButton" class="btn btn-secondary w-100" onclick="addDateTime()"><i class="bi bi-plus" aria-hidden="true"></i></button>
                         </div>
                     </div>
+                    <div id="dateTimes" class="row"></div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-secondary" onclick="closeDialog()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="createAppointment()">Create</button>
             </div>
         </div>
     </div>
