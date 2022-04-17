@@ -10,10 +10,20 @@
         <title>Appointment Finder</title>
     </head>
     <body>
-        <div id="dialogs"></div>
+        <nav class="navbar navbar-light bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand">Navbar</a>
+                <div class="d-flex">
+                    <span class="navbar-text">Logged in as:</span>
+                    <span id="username" class="navbar-text" style="margin-left: 5px; margin-right: 20px;"></span>
+                    <button id="logoutButton" class="btn btn-secondary">Logout <i class="bi bi-door-open" aria-hidden="true"></i></button>
+                </div>
+            </div>
+        </nav>
 
         <button id="addAppointmentButton" class="btn btn-primary" onclick="openAddAppointmentDialog()"><i class="bi bi-plus-lg" aria-hidden="true"></i></button>
 
+        <div id="dialogs"></div>
         <div id="toasts" class="toast-container"></div>
 
         <script src="js/jquery-3.6.0.min.js"></script>
@@ -21,5 +31,6 @@
         <script src="js/main.js"></script>
         <script src="js/toastUtils.js"></script>
         <script src="js/appointmentDialog.js"></script>
+        <script src="js/loginDialog.js"></script>
     </body>
 </html>
