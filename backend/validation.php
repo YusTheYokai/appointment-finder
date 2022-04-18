@@ -179,7 +179,7 @@
         // METHODEN
 
         public function validate() {
-            if (!isset($this->value)) {
+            if (!isset($this->value) || strlen($this->value) === 0) {
                 if ($this->optional) {
                     return $this->validationResult;
                 } else {

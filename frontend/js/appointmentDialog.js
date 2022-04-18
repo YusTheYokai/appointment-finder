@@ -73,7 +73,7 @@ function createAppointment() {
         dataType: "json",
         success: _res => {
             closeDialog();
-            bootstrap.Toast.getOrCreateInstance($("#successfullycreatedAppointmentToast")[0]).show();
+            bootstrap.Toast.getOrCreateInstance(document.getElementById("successfullyCreatedAppointmentToast")).show();
         },
         error: e => e.responseJSON.forEach(createAndShowErrorToast)
     });
@@ -85,8 +85,7 @@ function createAppointmentJson() {
         location: $("#locationInput").val(),
         description: $("#descriptionInput").val(),
         duration: $("#durationInput").val(),
-        // TODO: Creator anpassen
-        creator: "creator",
+        creator: $("#username").html(),
         dateTimes: dateTimes
     });
 }
@@ -96,7 +95,7 @@ function createAppointmentJson() {
 // //////////////////////////////////////////////////////////////////////////
 
 function closeDialog() {
-    bootstrap.Modal.getInstance($("#appointmentDialog")[0]).toggle();
+    bootstrap.Modal.getInstance(document.getElementById("appointmentDialog")).hide();
     $("#titleInput").val("");
     $("#locationInput").val("");
     $("#descriptionInput").val("");
