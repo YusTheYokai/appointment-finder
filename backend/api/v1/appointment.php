@@ -49,6 +49,15 @@
         echo json_encode($appointment);
     } else if ($method === "GET") {
         // TODO: Get Request handeln
+        
+        require_once "../../db/logIntoDatabase.php";
+
+        $query = "SELECT * FROM appointment";
+        $result = $db->query($query);
+
+        http_response_code(200);
+        header('Content-Type: application/json');
+        echo json_encode($result->fetch_all(MYSQLI_ASSOC));
     } else {
         http_response_code(405);
         header("Allow: GET POST");

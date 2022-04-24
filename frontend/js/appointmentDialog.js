@@ -74,6 +74,7 @@ function createAppointment() {
         success: _res => {
             closeDialog();
             bootstrap.Toast.getOrCreateInstance(document.getElementById("successfullyCreatedAppointmentToast")).show();
+            loadContent();
         },
         error: e => e.responseJSON.forEach(createAndShowErrorToast)
     });
