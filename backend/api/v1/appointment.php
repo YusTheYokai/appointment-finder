@@ -38,26 +38,46 @@
         $id = $result->fetch_row()[0];
 
         foreach ($appointment->dateTimes as $dateTime) {
-            $query = "INSERT INTO appointment_choice (DATE_TIME, APPOINTMENT_ID) VALUES (?, ?);";
+            $query = "INSERT INTO appointment_date_time (DATE_TIME, APPOINTMENT_ID) VALUES (?, ?);";
             $statement = $db->prepare($query);
             $statement->bind_param("ii", $dateTime, $id);
             $statement->execute();
         }
 
-        http_response_code(200);
+        http_response_code(201);
         header('Content-Type: application/json');
         echo json_encode($appointment);
     } else if ($method === "GET") {
-        // TODO: Get Request handeln
-        
         require_once "../../db/logIntoDatabase.php";
 
         $query = "SELECT * FROM appointment";
         $result = $db->query($query);
 
+        $appointments = $result->fetch_all(MYSQLI_ASSOC);
+        $appointmentsAndDateTimes = [];
+        foreach ($appointments as $appointment) {
+            $query = "SELECT * FROM appointment_date_time WHERE APPOINTMENT_ID = ?;";
+            $statement = $db->prepare($query);
+            $statement->bind_param("i", $appointment["ID"]);
+            $statement->execute();
+            $appointment["DATE_TIMES"] = $statement->get_result()->fetch_all(MYSQLI_ASSOC);
+
+            $dateTimesAndVotes = [];
+            foreach ($appointment["DATE_TIMES"] as $dateTime) {
+                $query = "SELECT * FROM date_time_vote WHERE DATE_TIME_ID = ?;";
+                $statement = $db->prepare($query);
+                $statement->bind_param("i", $dateTime["ID"]);
+                $statement->execute();
+                $dateTime["VOTES"] = $statement->get_result()->fetch_all(MYSQLI_ASSOC);
+                array_push($dateTimesAndVotes, $dateTime);
+            }
+
+            array_push($appointmentsAndDateTimes, $appointment);
+        }
+
         http_response_code(200);
-        header('Content-Type: application/json');
-        echo json_encode($result->fetch_all(MYSQLI_ASSOC));
+        header("Content-Type: application/json");
+        echo json_encode($appointmentsAndDateTimes);
     } else {
         http_response_code(405);
         header("Allow: GET POST");
