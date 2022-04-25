@@ -74,7 +74,7 @@ function createAppointment() {
         success: _res => {
             closeDialog();
             bootstrap.Toast.getOrCreateInstance(document.getElementById("successfullyCreatedAppointmentToast")).show();
-            loadContent();
+            loadAppointments();
         },
         error: e => e.responseJSON.forEach(createAndShowErrorToast)
     });
@@ -103,4 +103,5 @@ function closeDialog() {
     $("#durationInput").val("");
     $("#dateTimeInput").val("");
     $("#dateTimes").empty();
+    dateTimes = [];
 }

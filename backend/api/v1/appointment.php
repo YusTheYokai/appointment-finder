@@ -60,10 +60,9 @@
             $statement = $db->prepare($query);
             $statement->bind_param("i", $appointment["ID"]);
             $statement->execute();
-            $appointment["DATE_TIMES"] = $statement->get_result()->fetch_all(MYSQLI_ASSOC);
 
             $dateTimesAndVotes = [];
-            foreach ($appointment["DATE_TIMES"] as $dateTime) {
+            foreach ($statement->get_result()->fetch_all(MYSQLI_ASSOC) as $dateTime) {
                 $query = "SELECT * FROM date_time_vote WHERE DATE_TIME_ID = ?;";
                 $statement = $db->prepare($query);
                 $statement->bind_param("i", $dateTime["ID"]);
@@ -72,6 +71,7 @@
                 array_push($dateTimesAndVotes, $dateTime);
             }
 
+            $appointment["DATE_TIMES"] = $dateTimesAndVotes;
             array_push($appointmentsAndDateTimes, $appointment);
         }
 

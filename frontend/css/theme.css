@@ -35,7 +35,7 @@
     
 }
 
-.noData {
+.no-appointments {
     margin-bottom: 5px;
     margin-left: 20%;
     margin-right: 20%;
@@ -73,4 +73,8 @@ h2 {
 .showMoreButton:active {
 	position:relative;
 	top:1px;
+}
+
+.voted {
+    background-color: pink;
 }
