@@ -141,7 +141,7 @@ function createDescriptionContainer(appointment) {
     const column = $(`<div class="col-lg" />`);
     column.append($(`<p class="description"><i class="bi bi-info-circle"></i> ${appointment.DESCRIPTION}</p>`));
     row.append(column);
-    container.append(column);
+    container.append(row);
     return container;
 }
 
