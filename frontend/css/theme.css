@@ -1,3 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,500;0,900;1,300&display=swap');
+
+:root {
+    --background-color: #222;
+    --text-color: #f3f3f3;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: "Roboto", sans-serif;
+    font-weight: 500;
+}
+
 /* BOOTSTRAP */
 
 .toast-container {
@@ -7,7 +21,31 @@
     z-index: 100000;
 }
 
-/* CUSTOM */
+/* NAVBAR */
+
+nav {
+    background: #111;
+    box-shadow: 0px 7px 2px 0px rgba(60, 60, 60, 0.75);
+}
+
+#addAppointmentButton {
+    color: var(--text-color);
+}
+
+/* APPOINTMENT DIALOG */
+
+.modal-content {
+    background-color: var(--background-color);
+}
+
+#appointmentDialog .row {
+    margin-bottom: 1rem;
+}
+
+#appointmentDialog p {
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+}
 
 .date-time {
     font-size: 20px;
@@ -19,62 +57,56 @@
 
     background-color: transparent;
     border: none;
-    color: white;
+    color: var(--text-color);
 }
 
 /* APPOINTMENT */
 
+#appointments {
+    margin-top: 80px;
+}
+
 .appointment {
+    background: rgb(63,94,251);
+    background: linear-gradient(-18deg, rgba(63,94,251,1) 68%, rgba(252,70,107,1) 100%);
+    border-radius: 20px;
+    margin-bottom: 20px;
+    box-shadow: 7px 7px 2px 0px rgba(60, 60, 60, 0.75);
+    padding-top: 15px;
+}
+
+.title {
+    font-size: 3rem;
+    font-weight: 900;
+    margin-right: 1rem;
+}
+
+.location-duration, .created-by, .view-details-button {
+    font-size: 2.5rem;
+}
+
+.created-by {
+    font-style: italic;
+}
+
+.description {
+    font-size: 1.5rem;
+}
+
+.vote-button {
+    width: 100%;
     margin-bottom: 5px;
-    margin-left: 20%;
-    margin-right: 20%;
-    text-align: center;
-    border-style: solid;
-    border-radius: 15px 50px;
-    border-color: blue;
-    
+    font-size: 1.5rem;
+    border-radius: 8px;
+    background: rgba(0.5, 0.5, 0.5, 0.3);
+    border: none;
+    transition: opacity 0.5s ease-in-out;
 }
 
-.no-appointments {
-    margin-bottom: 5px;
-    margin-left: 20%;
-    margin-right: 20%;
-    text-align: center;
-    border-style: solid;
-    border-radius: 15px 50px;
-    border-color: blue;
-    color: red;
-}
-
-h2 {
-    color:#0688fa;
-}
-
-.showMoreButton {
-	box-shadow:inset 0px -3px 7px 0px #29bbff;
-	background:linear-gradient(to bottom, #2dabf9 5%, #0688fa 100%);
-	background-color:#2dabf9;
-	border-radius:3px;
-	border:1px solid #0b0e07;
-	display:inline-block;
-	cursor:pointer;
-	color:#ffffff;
-	font-family:Arial;
-	font-size:15px;
-	padding:9px 23px;
-	text-decoration:none;
-	text-shadow:0px 1px 0px #263666;
-    margin-bottom: 1%;
-}
-.showMoreButton:hover {
-	background:linear-gradient(to bottom, #0688fa 5%, #2dabf9 100%);
-	background-color:#0688fa;
-}
-.showMoreButton:active {
-	position:relative;
-	top:1px;
+.vote-button:hover {
+    background: linear-gradient(150deg, rgb(6, 22, 105) 68%, rgb(124, 10, 33) 100%);
 }
 
 .voted {
-    background-color: pink;
+    background: linear-gradient(150deg, rgb(19, 39, 142) 68%, rgb(156, 25, 51) 100%);
 }

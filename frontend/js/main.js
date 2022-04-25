@@ -57,7 +57,6 @@ function findUsernameCookie() {
 }
 
 function openAddAppointmentDialog() {
-    $("#appointmentDialogTitle").html("Add Appointment");
     new bootstrap.Modal(document.getElementById("appointmentDialog"), null).show();
 }
 
@@ -88,29 +87,85 @@ function displayAppointments(res) {
 }
 
 function createAppointmentElement(appointment) {
-    const appointmentBody = $("<div />");
-    appointmentBody.addClass('appointment');
-    appointmentBody.append($(`<h2>Title: ${appointment.TITLE}</h2>`));
-    appointmentBody.append($(`<div>Creator: ${appointment.CREATOR}</div>`));
-    appointmentBody.append($(`<div>Location: ${appointment.LOCATION}</div>`));
-    appointmentBody.append($(`<div>Duration: ${appointment.DURATION}</div>`));
+    const appointmentBody = $(`<div class="appointment" />`);
 
-    const uuid = uuidv4();
-    const detailsContainer = $(`<div id="${uuid}" class="collapse" />`);
-    detailsContainer.append(`<div>Description: ${appointment.DESCRIPTION}</div>`);
-    const dateTimeButtonsContainer = $("<div />");
-    appointment.DATE_TIMES.forEach(dateTime => dateTimeButtonsContainer.append(createDateTimeButton(dateTime)));
-    detailsContainer.append(dateTimeButtonsContainer);
-    appointmentBody.append(detailsContainer);
+    const container = $(`<div class="container-fluid" />`);
+    const firstRow = $(`<div class="row" />`);
+    const baseInfoColumn = $(`<div class="col-lg" />`);
+    const detailsColumn = $(`<div class="col-lg-4" />`);
+    const secondRow = $(`<div class="row" />`);
+    const dateTimeButtonsColumn = $(`<div class="col-lg" />`);
 
-    const expandButton = $(`<button class="btn btn-primary showMoreButton" type="button" data-bs-toggle="collapse" data-bs-target="#${uuid}" aria-expanded="false" aria-controls="${uuid}">show more</button>`);
-    appointmentBody.append(expandButton);
+    container.append(firstRow, secondRow);
+    firstRow.append(baseInfoColumn, detailsColumn);
+    baseInfoColumn.append(createBaseInfoContainer(appointment));
+    detailsColumn.hide();
+    detailsColumn.append(createDescriptionContainer(appointment));
+    secondRow.hide();
+    secondRow.append(dateTimeButtonsColumn);
+    dateTimeButtonsColumn.append(createDateTimeButtonsContainer(appointment.DATE_TIMES));
+
+    firstRow.on("click", _e => { detailsColumn.toggle(250); secondRow.toggle(250); });
+    appointmentBody.append(container);
     return appointmentBody;
+}
+
+function createBaseInfoContainer(appointment) {
+    const baseInfoContainer = $(`<div class="container-xl" />`);
+    const firstRow = $(`<div class="row" />`);
+
+    const firstRowFirstColumn = $(`<div class="col-xl" />`);
+    firstRowFirstColumn.append($(`<p class="title">${appointment.TITLE}</p>`));
+
+    const firstRowSecondColumn = $(`<div class="col-xl" />`);
+    firstRowSecondColumn.append($(`<p class="location-duration"><i class="bi bi-geo-alt"></i> ${appointment.LOCATION}</p>`));
+
+    const secondRow = $(`<div class="row" />`);
+
+    const secondRowFirstColumn = $(`<div class="col-xl" />`);
+    secondRowFirstColumn.append($(`<p class="created-by"><i class="bi bi-person"></i> ${appointment.CREATOR}</p>`));
+
+    const secondRowSecondColumn = $(`<div class="col-xl" />`);
+    secondRowSecondColumn.append($(`<p class="location-duration"><i class="bi bi-clock"></i> ${appointment.DURATION} minutes</p>`))
+
+    firstRow.append(firstRowFirstColumn, firstRowSecondColumn);
+    secondRow.append(secondRowFirstColumn, secondRowSecondColumn);
+    baseInfoContainer.append(firstRow);
+    baseInfoContainer.append(secondRow);
+    return baseInfoContainer;
+}
+
+function createDescriptionContainer(appointment) {
+    const container = $(`<div class="container-lg" />`);
+    const row = $(`<div class="row" />`);
+    const column = $(`<div class="col-lg" />`);
+    column.append($(`<p class="description"><i class="bi bi-info-circle"></i> ${appointment.DESCRIPTION}</p>`));
+    row.append(column);
+    container.append(column);
+    return container;
+}
+
+function createDateTimeButtonsContainer(dateTimes) {
+    const BUTTONS_PER_ROW = 4;
+    const container = $(`<div class="container-sm" />`);
+
+    let row;
+    dateTimes.forEach((dateTime, index, _arr) => {
+        if (index % BUTTONS_PER_ROW === 0) {
+            row = $(`<div class="row" />`);
+            container.append(row);
+        }
+        const col = $(`<div class="col-sm-${12 / BUTTONS_PER_ROW}" />`);
+        col.append(createDateTimeButton(dateTime));
+        row.append(col);
+    });
+
+    return container;
 }
 
 function createDateTimeButton(dateTime) {
     const userHasVoted = dateTime.VOTES.some(v => v.USERNAME === $("#username").html());
-    const dateTimeButton = $(`<button class="btn btn-secondary ${userHasVoted ? "voted" : ""}">${new Date(dateTime.DATE_TIME).toLocaleString()} (${dateTime.VOTES.length})</button>`);
+    const dateTimeButton = $(`<button class="btn btn-secondary vote-button ${userHasVoted ? "voted" : ""}">${new Date(dateTime.DATE_TIME).toLocaleString()} (${dateTime.VOTES.length})</button>`);
     dateTimeButton.on("click", _e => voteAction(userHasVoted ? "DELETE" : "POST" , dateTime, dateTimeButton, dateTime.VOTES.length));
     return dateTimeButton;
 }
