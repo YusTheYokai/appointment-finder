@@ -7,6 +7,7 @@ function login() {
     } else if (username.length > 30) {
         bootstrap.Toast.getOrCreateInstance(document.getElementById("usernameTooLongToast")).show();
     } else {
+        loadAppointments();
         createLoginCookie(username);
         $("#username").html(username);
         $("#usernameInput").val("");
