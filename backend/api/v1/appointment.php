@@ -71,7 +71,13 @@
                 array_push($dateTimesAndVotes, $dateTime);
             }
 
+            $query = "SELECT * FROM comment WHERE APPOINTMENT_ID = ? ORDER BY CREATION DESC;";
+            $statement = $db->prepare($query);
+            $statement->bind_param("i", $appointment["ID"]);
+            $statement->execute();
+
             $appointment["DATE_TIMES"] = $dateTimesAndVotes;
+            $appointment["COMMENTS"] = $statement->get_result()->fetch_all(MYSQLI_ASSOC);
             array_push($appointmentsAndDateTimes, $appointment);
         }
 

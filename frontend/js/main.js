@@ -95,17 +95,25 @@ function createAppointmentElement(appointment) {
     const detailsColumn = $(`<div class="col-lg-4" />`);
     const secondRow = $(`<div class="row" />`);
     const dateTimeButtonsColumn = $(`<div class="col-lg" />`);
+    const thirdRow = $(`<div class="row" />`);
+    const commentsColumn = $(`<div class="col-lg" />`);
 
-    container.append(firstRow, secondRow);
+    container.append(firstRow, secondRow, thirdRow);
+
     firstRow.append(baseInfoColumn, detailsColumn);
     baseInfoColumn.append(createBaseInfoContainer(appointment));
     detailsColumn.hide();
     detailsColumn.append(createDescriptionContainer(appointment));
+
     secondRow.hide();
     secondRow.append(dateTimeButtonsColumn);
     dateTimeButtonsColumn.append(createDateTimeButtonsContainer(appointment.DATE_TIMES));
 
-    firstRow.on("click", _e => { detailsColumn.toggle(250); secondRow.toggle(250); });
+    thirdRow.hide();
+    thirdRow.append(commentsColumn);
+    commentsColumn.append(createCommentsContainer(appointment));
+
+    firstRow.on("click", _e => { detailsColumn.toggle(250); secondRow.toggle(250); thirdRow.toggle(250); });
     appointmentBody.append(container);
     return appointmentBody;
 }
@@ -168,6 +176,62 @@ function createDateTimeButton(dateTime) {
     const dateTimeButton = $(`<button class="btn btn-secondary vote-button ${userHasVoted ? "voted" : ""}">${new Date(dateTime.DATE_TIME).toLocaleString()} (${dateTime.VOTES.length})</button>`);
     dateTimeButton.on("click", _e => voteAction(userHasVoted ? "DELETE" : "POST" , dateTime, dateTimeButton, dateTime.VOTES.length));
     return dateTimeButton;
+}
+
+function createCommentsContainer(appointment) {
+    const container = $(`<div class="container-fluid" />`);
+    const inputRow = $(`<div class="row" />`);
+    const inputColumn = $(`<div class="col-sm-10" />`);
+    const buttonColumn = $(`<div class="col-sm-2" />`);
+
+    container.append(inputRow);
+    inputRow.append(inputColumn, buttonColumn);
+    const textarea = $(`<textarea class="w-100"></textarea>`);
+    inputColumn.append(textarea);
+    const button = $(`<button class="btn"><i class="bi bi-arrow-return-left"></i></button>`);
+    buttonColumn.append(button);
+
+    button.on("click", _e => {
+        $.ajax({
+            method: "POST",
+            url: "../backend/api/v1/comment.php",
+            data: JSON.stringify({ username: $("#username").html(), content: textarea.val(), appointmentId: appointment.ID }),
+            contentType: "json",
+            dataType: "json",
+            success: _res => {
+                bootstrap.Toast.getOrCreateInstance(document.getElementById("successfullyCreatedCommentToast")).show();
+                //TODO Einzelnes Kommentar einfügen statt alles neu zu laden
+                loadAppointments();
+            },
+            error: e => e.responseJSON.forEach(createAndShowErrorToast)
+        });
+
+    })
+
+    appointment.COMMENTS.forEach(comment => {
+        const row = $(`<div class="row" />`);
+        const col = $(`<div class="col-sm-12" />`);
+
+        const commentContainer = $(`<div class="container-sm" />`);
+        const headerRow = $(`<div class="row" />`);
+        const userNameColumn = $(`<div class="col-sm-6" />`);
+        const creationColumn = $(`<div class="col-sm-6" style="text-align: right"/>`);
+        const contentRow = $(`<div class="row" />`);
+        const contentColumn = $(`<div class="col-sm-12" />`);
+
+        commentContainer.append(headerRow, contentRow);
+        headerRow.append(userNameColumn, creationColumn);
+        userNameColumn.append(comment.USERNAME);
+        creationColumn.append(new Date(comment.CREATION).toLocaleString());
+        contentRow.append(contentColumn);
+        contentColumn.append(comment.CONTENT);
+
+        col.append(commentContainer);
+        row.append(col);
+        container.append(row);
+    });
+
+    return container;
 }
 
 // //////////////////////////////////////////////////////////////////////////
