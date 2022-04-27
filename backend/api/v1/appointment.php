@@ -56,7 +56,7 @@
         $appointments = $result->fetch_all(MYSQLI_ASSOC);
         $appointmentsAndDateTimes = [];
         foreach ($appointments as $appointment) {
-            $query = "SELECT * FROM appointment_date_time WHERE APPOINTMENT_ID = ?;";
+            $query = "SELECT * FROM appointment_date_time WHERE APPOINTMENT_ID = ? ORDER BY DATE_TIME ASC;";
             $statement = $db->prepare($query);
             $statement->bind_param("i", $appointment["ID"]);
             $statement->execute();
